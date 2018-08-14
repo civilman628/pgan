@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8e430e0b-b19f-4399-91df-65638c4be6f3}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>train.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>Global|PythonCore|3.5</InterpreterId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
+    <Content Include="representative_image_512x256.png" />
+    <Content Include="requirements-pip.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="config.py" />
+    <Compile Include="dataset.py" />
+    <Compile Include="dataset_tool.py" />
+    <Compile Include="legacy.py" />
+    <Compile Include="loss.py" />
+    <Compile Include="metrics\frechet_inception_distance.py" />
+    <Compile Include="metrics\inception_score.py" />
+    <Compile Include="metrics\ms_ssim.py" />
+    <Compile Include="metrics\sliced_wasserstein.py" />
+    <Compile Include="metrics\__init__.py" />
+    <Compile Include="misc.py" />
+    <Compile Include="networks.py" />
+    <Compile Include="tfutil.py" />
+    <Compile Include="train.py" />
+    <Compile Include="util_scripts.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="metrics" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.5" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
