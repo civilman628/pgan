@@ -20,9 +20,6 @@ import misc
 import tfutil
 import train
 import dataset
-import PIL.Image
-
-from color_pencil import color_draw
 
 #----------------------------------------------------------------------------
 # Generate random images or image grids using a previously trained network.
@@ -35,57 +32,16 @@ def generate_fake_images(run_id, snapshot=None, grid_size=[1,1], num_pngs=1, ima
     random_state = np.random.RandomState(random_seed)
 
     print('Loading network from "%s"...' % network_pkl)
-    #G, D, Gs = misc.load_network_pkl(run_id, snapshot)
-    Gs = misc.load_network_pkl(run_id, snapshot)
-
-    result_subdir = misc.create_result_subdir(config.result_dir, config.desc)
-    for png_idx in range(num_pngs):
-        print('Generating png %d / %d...' % (png_idx, num_pngs))
-        latents = misc.random_latents(np.prod(grid_size), Gs, random_state=random_state)
-        #print (latents)
-        labels = np.zeros([latents.shape[0], 0], np.float32)
-        images = Gs.run(latents, labels, minibatch_size=minibatch_size, num_gpus=config.num_gpus, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8)
-        misc.save_image_grid(images, os.path.join(result_subdir, '%s%06d.png' % (png_prefix, png_idx)), [0,255], grid_size)
-    open(os.path.join(result_subdir, '_done.txt'), 'wt').close()
-    #misc.save_pkl(Gs, os.path.join(config.result_dir, 'network-final.pkl'))
-#----------------------------------------------------------------------------
-# Generate random images or image grids using a previously trained network and input image
-# To run, uncomment the appropriate line in config.py and launch train.py.
-
-def generate_fake_images_from_image(run_id, snapshot=None, grid_size=[1,1], num_pngs=1, image_shrink=1, png_prefix=None, random_seed=1000, minibatch_size=8):
-    network_pkl = misc.locate_network_pkl(run_id, snapshot)
-    if png_prefix is None:
-        png_prefix = misc.get_id_string_for_network_pkl(network_pkl) + '-'
-    random_state = np.random.RandomState(random_seed)
-
-    print('Loading network from "%s"...' % network_pkl)
     G, D, Gs = misc.load_network_pkl(run_id, snapshot)
 
     result_subdir = misc.create_result_subdir(config.result_dir, config.desc)
     for png_idx in range(num_pngs):
         print('Generating png %d / %d...' % (png_idx, num_pngs))
-
-        #session = tf.get_default_session()
-        #tensor_name_list = [tensor.name for tensor in tf.get_default_graph().as_graph_def().node]
-        #for tensor_name in tensor_name_list:
-        #    if tensor_name.startswith('D/4x4/Dense'):
-          #      print(tensor_name)
-        
-
-        latent_vector = tf.get_default_graph().get_tensor_by_name('D/4x4/Dense0/LeakyRelu/mul:0')  #D/4x4/Dense0/LeakyRelu/Maximum:0
-        #latent_vector = tf.get_default_session().graph.get_tensor_by_name('4x4/Dense0')
-        testimage = np.asarray(PIL.Image.open('./172871705.jpg'),dtype=np.float32)
-        testimage = testimage.transpose(2, 0, 1)
-        #testimage = (testimage -127.5)/127.5
-        testimage = np.expand_dims(testimage,axis=0)
-        vector = tf.get_default_session().run(latent_vector, {'D/images_in:0':testimage})
-        #vector = (vector-np.mean(vector,axis=1))/np.max(vector-np.mean(vector,axis=1))
-        #latents = misc.random_latents(np.prod(grid_size), Gs, random_state=random_state)
-        labels = np.zeros([vector.shape[0], 0], np.float32)
-        images = Gs.run(vector, labels, minibatch_size=minibatch_size, num_gpus=config.num_gpus, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8)
+        latents = misc.random_latents(np.prod(grid_size), Gs, random_state=random_state)
+        labels = np.zeros([latents.shape[0], 0], np.float32)
+        images = Gs.run(latents, labels, minibatch_size=minibatch_size, num_gpus=config.num_gpus, out_mul=127.5, out_add=127.5, out_shrink=image_shrink, out_dtype=np.uint8)
         misc.save_image_grid(images, os.path.join(result_subdir, '%s%06d.png' % (png_prefix, png_idx)), [0,255], grid_size)
     open(os.path.join(result_subdir, '_done.txt'), 'wt').close()
-
 
 #----------------------------------------------------------------------------
 # Generate MP4 video of random interpolations using a previously trained network.
@@ -99,8 +55,7 @@ def generate_interpolation_video(run_id, snapshot=None, grid_size=[1,1], image_s
     random_state = np.random.RandomState(random_seed)
 
     print('Loading network from "%s"...' % network_pkl)
-    #G, D, Gs = misc.load_network_pkl(run_id, snapshot)
-    Gs = misc.load_network_pkl(run_id, snapshot)
+    G, D, Gs = misc.load_network_pkl(run_id, snapshot)
 
     print('Generating latent vectors...')
     shape = [num_frames, np.prod(grid_size)] + Gs.input_shape[1:] # [frame, image, channel, component]
@@ -119,11 +74,7 @@ def generate_interpolation_video(run_id, snapshot=None, grid_size=[1,1], image_s
             grid = scipy.ndimage.zoom(grid, [image_zoom, image_zoom, 1], order=0)
         if grid.shape[2] == 1:
             grid = grid.repeat(3, 2) # grayscale => RGB
-        pencil_sketch = color_draw(grid)
-        pencil_sketch = np.expand_dims(pencil_sketch,axis =2)
-        pencil_sketch = pencil_sketch.repeat(3,2)
-
-        return pencil_sketch
+        return grid
 
     # Generate video.
     import moviepy.editor # pip install moviepy

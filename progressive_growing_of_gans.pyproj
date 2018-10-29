@@ -24,7 +24,6 @@
     <Content Include="requirements-pip.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="color_pencil.py" />
     <Compile Include="config.py" />
     <Compile Include="dataset.py" />
     <Compile Include="dataset_tool.py" />
@@ -36,13 +35,9 @@
     <Compile Include="metrics\sliced_wasserstein.py" />
     <Compile Include="metrics\__init__.py" />
     <Compile Include="misc.py" />
-    <Compile Include="natural_histogram_matching.py" />
     <Compile Include="networks.py" />
-    <Compile Include="pencil.py" />
-    <Compile Include="stitch_function.py" />
     <Compile Include="tfutil.py" />
     <Compile Include="train.py" />
-    <Compile Include="util.py" />
     <Compile Include="util_scripts.py" />
   </ItemGroup>
   <ItemGroup>
