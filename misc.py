@@ -20,6 +20,8 @@ import config
 import dataset
 import legacy
 
+from color_pencil import color_draw
+
 #----------------------------------------------------------------------------
 # Convenience wrappers for pickle that are able to load data produced by
 # older versions of the code.
@@ -70,6 +72,7 @@ def convert_to_pil_image(image, drange=[0,1]):
     image = adjust_dynamic_range(image, drange, [0,255])
     image = np.rint(image).clip(0, 255).astype(np.uint8)
     format = 'RGB' if image.ndim == 3 else 'L'
+    #image = color_draw(image)  # add in
     return PIL.Image.fromarray(image, format)
 
 def save_image(image, filename, drange=[0,1], quality=95):

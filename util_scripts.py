@@ -119,11 +119,11 @@ def generate_interpolation_video(run_id, snapshot=None, grid_size=[1,1], image_s
             grid = scipy.ndimage.zoom(grid, [image_zoom, image_zoom, 1], order=0)
         if grid.shape[2] == 1:
             grid = grid.repeat(3, 2) # grayscale => RGB
-        pencil_sketch = color_draw(grid)
-        pencil_sketch = np.expand_dims(pencil_sketch,axis =2)
-        pencil_sketch = pencil_sketch.repeat(3,2)
+        colorpencil = color_draw(grid)
+        #colorpencil = np.expand_dims(colorpencil,axis =2)
+        #colorpencil = colorpencil.repeat(3,2)
 
-        return pencil_sketch
+        return colorpencil
 
     # Generate video.
     import moviepy.editor # pip install moviepy

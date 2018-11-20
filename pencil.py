@@ -123,8 +123,8 @@ def get_s(J, gammaS=1):
     Sp = (Sp - Sp[:].min()) / (Sp[:].max() - Sp[:].min())
     S = (1 - Sp) ** gammaS
 
-    img = Image.fromarray(S * 255)
-    # img.show()
+    #img = Image.fromarray(S * 255)
+    #img.show()
 
     return S
 

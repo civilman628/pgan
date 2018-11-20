@@ -17,7 +17,7 @@ from pencil import get_s, get_t, save_output
 import cv2
 
 
-def color_draw(im, gammaS=1, gammaI=1):
+def color_draw(im, gammaS=1, gammaI=0.1):
     #im = Image.open(path)
     im=Image.fromarray(im,mode='RGB')
 
@@ -31,15 +31,15 @@ def color_draw(im, gammaS=1, gammaI=1):
 
     S = get_s(Iruv[:, :, 0], gammaS=gammaS)
     #T = get_t(Iruv[:, :, 0], type, gammaI=gammaI)
-    #Ypencil = S * T
+    Ypencil = S # S * T
 
-    #new_Iruv = Iruv.copy()
-    #new_Iruv.flags.writeable = True
-    #new_Iruv[:, :, 0] = Ypencil * 255
-
-    sketch = np.array(S*255,dtype='uint8')
+    new_Iruv = Iruv.copy()
+    new_Iruv.flags.writeable = True
+    new_Iruv[:, :, 0] = Ypencil * 255
+    colorpencil = np.array ( Image.fromarray(new_Iruv,'YCbCr').convert('RGB'),dtype='uint8')
+    #sketch = np.array(S*255,dtype='uint8')
     
-    return sketch
+    return colorpencil
 
     #R = cv2.cvtColor(new_Iruv, cv2.COLOR_YCR_CB2BGR)
     #img = Image.fromarray(R)
